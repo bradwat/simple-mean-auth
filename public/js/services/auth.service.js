@@ -9,17 +9,18 @@ function AuthService($q, $timeout, $http) {
     return{
       isLoggedIn: isLoggedIn,
       getUserStatus: getUserStatus,
-      login,
+      login: login,
       logout: logout,
       register: register,
     };
 
-    function isLoggedIn(){}
+    function isLoggedIn(){
       if(user){
         return  true;
       }else {
         return false;
       }
+    }
 
     function getUserStatus(){
       $http.get('/user/status')
@@ -34,9 +35,10 @@ function AuthService($q, $timeout, $http) {
             user = false;
         });
       }
-    function login(username, password){
-      var defered = $q.defer();
-      $http.post('/user,/login',{username: username, password: password,})
+      function login(username, password){
+        var deferred = $q.defer();
+        $http.post('/user/login',
+        {username:username, password: password})
         .then(function(response){
           if(response.data.status){
             user = true;
@@ -48,12 +50,14 @@ function AuthService($q, $timeout, $http) {
         })
         .catch(function(err){
           user = false;
-          deffered.reject();
+          deferred.reject();
         });
+
         return deferred.promise;
-    }
+      }
 
     function logout(){
+      var deferred = $q.defer();
       $http.get('/user/logout')
         .then(function(response){
           user = false;
@@ -66,12 +70,12 @@ function AuthService($q, $timeout, $http) {
         return deferred.promise;
       }
       function register(username, password){
-          var deffered = $q.defer();
+          var deferred = $q.defer();
           $http.post('/user/register',
         {username: username, password: password})
         .then(function(response){
           if(response.data.status){
-            deferred.resolve()
+            deferred.resolve();
             }else{
               deferred.reject();
           }
