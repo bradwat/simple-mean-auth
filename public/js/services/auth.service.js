@@ -15,11 +15,8 @@ function AuthService($q, $timeout, $http) {
     };
 
     function isLoggedIn(){
-      if(user){
-        return  true;
-      }else {
-        return false;
-      }
+      return user;
+
     }
 
     function getUserStatus(){
